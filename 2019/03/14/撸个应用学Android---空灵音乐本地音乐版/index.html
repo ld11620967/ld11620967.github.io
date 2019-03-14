@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言使用Kotlin实现一个简易的本地音乐客户端，部分代码为Java语言，Kotlin可以完美调用Java，Enjoy it！  三方库 Glide Anko BaseRecyclerViewAdapterHelper Greendao  环境准备项目使用的是最新的 Android Studio3.0 版本，新版的Studio只需要在项目新建时勾选“Include Kotlin support”即">
+<meta property="og:type" content="article">
+<meta property="og:title" content="撸个应用学Android---空灵音乐本地音乐版">
+<meta property="og:url" content="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/index.html">
+<meta property="og:site_name" content="Nilin的小屋">
+<meta property="og:description" content="前言使用Kotlin实现一个简易的本地音乐客户端，部分代码为Java语言，Kotlin可以完美调用Java，Enjoy it！  三方库 Glide Anko BaseRecyclerViewAdapterHelper Greendao  环境准备项目使用的是最新的 Android Studio3.0 版本，新版的Studio只需要在项目新建时勾选“Include Kotlin support”即">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/2.gif">
+<meta property="og:image" content="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/4.png">
+<meta property="og:updated_time" content="2019-03-14T08:59:47.519Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="撸个应用学Android---空灵音乐本地音乐版">
+<meta name="twitter:description" content="前言使用Kotlin实现一个简易的本地音乐客户端，部分代码为Java语言，Kotlin可以完美调用Java，Enjoy it！  三方库 Glide Anko BaseRecyclerViewAdapterHelper Greendao  环境准备项目使用的是最新的 Android Studio3.0 版本，新版的Studio只需要在项目新建时勾选“Include Kotlin support”即">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/">
+
+
+
+
+
+  <title>撸个应用学Android---空灵音乐本地音乐版 | Nilin的小屋</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nilin的小屋</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Nilin">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nilin的小屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">撸个应用学Android---空灵音乐本地音乐版</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T16:08:01+08:00">
+                2019-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>使用Kotlin实现一个简易的本地音乐客户端，部分代码为Java语言，Kotlin可以完美调用Java，Enjoy it！</p>
+<p><img src="/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/1.jpg" alt></p>
+<h3 id="三方库"><a href="#三方库" class="headerlink" title="三方库"></a>三方库</h3><ul>
+<li>Glide</li>
+<li>Anko</li>
+<li>BaseRecyclerViewAdapterHelper</li>
+<li>Greendao</li>
+</ul>
+<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>项目使用的是最新的 Android Studio3.0 版本，新版的Studio只需要在项目新建时勾选“Include Kotlin support”即可导入Kotlin的支持，无需配置复杂环境。</p>
+<h3 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h3><p><img src="/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/2.gif" alt></p>
+<h3 id="项目目录"><a href="#项目目录" class="headerlink" title="项目目录"></a>项目目录</h3><p><img src="/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/3.png" alt></p>
+<h3 id="歌词显示"><a href="#歌词显示" class="headerlink" title="歌词显示"></a>歌词显示</h3><p>歌词显示主要实现逻辑件位于view文件夹下的ILrcBuilder、ILrcView、LrcRow、LrcView四个文件。在需要实现歌词显示的Activity中添加如下布局文件即可：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">com.nilin.etherealmuisc.view.LrcView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/lrcView"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"0dip"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_weight</span>=<span class="string">"1"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>其中LrcRow文件下可以设置歌词的相关属性参数，例如歌词文字的大小、行间距、正在播放歌词的颜色等等。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> List&lt;LrcRow&gt; mLrcRows; 	<span class="comment">// all lrc rows of one lrc file</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mMinSeekFiredOffset = <span class="number">10</span>; <span class="comment">// min offset for fire seek action, px;</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mHignlightRow = <span class="number">0</span>;   <span class="comment">// current singing row , should be highlighted.</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mHignlightRowColor = Color.YELLOW; </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mNormalRowColor = Color.WHITE;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mSeekLineColor = Color.CYAN;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mSeekLineTextColor = Color.CYAN;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mSeekLineTextSize = <span class="number">20</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mMinSeekLineTextSize = <span class="number">30</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mMaxSeekLineTextSize = <span class="number">50</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mLrcFontSize = <span class="number">50</span>; 	<span class="comment">// font size of lrc</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mMinLrcFontSize = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mMaxLrcFontSize = <span class="number">40</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mPaddingY = <span class="number">43</span>;	  <span class="comment">// padding of each row</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mSeekLinePaddingX = <span class="number">0</span>; <span class="comment">// Seek line padding x</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> mDisplayMode = DISPLAY_MODE_NORMAL;</span><br><span class="line"><span class="keyword">private</span> LrcViewListener mLrcViewListener;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注：后续扩展在线歌词，歌词路径暂时写死在手机根目录，文件名为“林中鸟.lrc”。</p>
+</blockquote>
+<h3 id="扫描音乐"><a href="#扫描音乐" class="headerlink" title="扫描音乐"></a>扫描音乐</h3><h4 id="扫描音乐工具类"><a href="#扫描音乐工具类" class="headerlink" title="扫描音乐工具类"></a>扫描音乐工具类</h4><p>扫描音乐的实现逻辑如下，DISPLAY_NAME、TITLE、ARTIST、DATA、SIZE、DURATION分别对应了扫描音乐的外部可重命名的文件名、内部音乐文件名、歌手名称、文件所在路径、歌曲的大小、歌曲的时长信息。获取后可用于后续自定义扫描码、歌曲播放设置等处。isAudioControlPanelAvailable（）方法是用来设置音效用的，后续会说到。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">object MusicUtils &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 扫描系统里面的音频文件，返回一个list集合</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">fun <span class="title">getMusicData</span><span class="params">(context: Context)</span>: ArrayList&lt;Music&gt; </span>&#123;</span><br><span class="line">        val filter_size = PreferenceManager.getDefaultSharedPreferences(context).getString(<span class="string">"filter_size"</span>, <span class="string">"0"</span>)</span><br><span class="line">        val filter_time = PreferenceManager.getDefaultSharedPreferences(context).getString(<span class="string">"filter_time"</span>, <span class="string">"0"</span>)</span><br><span class="line">        val list = ArrayList&lt;Music&gt;()</span><br><span class="line">        <span class="comment">// 媒体库查询语句（写一个工具类MusicUtils）</span></span><br><span class="line">        val cursor = context.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, MediaStore.Audio.AudioColumns.IS_MUSIC)</span><br><span class="line">        <span class="keyword">if</span> (cursor != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span> (cursor.moveToNext()) &#123;</span><br><span class="line">                val music: Music? = Music()</span><br><span class="line"><span class="comment">//                music!!.song = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME))</span></span><br><span class="line">                music!!.song = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))</span><br><span class="line">                music.singer = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))</span><br><span class="line">                music.path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))</span><br><span class="line">                music.size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE))</span><br><span class="line">                music.duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))</span><br><span class="line">                <span class="keyword">if</span> (music.size.toInt()/<span class="number">1000</span> &gt; filter_size.toInt() || music.duration!!.toInt()/<span class="number">1000</span> &gt; filter_time.toInt()) &#123;</span><br><span class="line">                    <span class="comment">// 注释部分是切割标题，分离出歌曲名和歌手 （本地媒体库读取的歌曲信息不规范）</span></span><br><span class="line">                    <span class="keyword">if</span> (music.song!!.contains(<span class="string">"-"</span>)) &#123;</span><br><span class="line">                        val str = music.song!!.split(<span class="string">"-"</span>.toRegex()).dropLastWhile &#123; it.isEmpty() &#125;.toTypedArray()</span><br><span class="line">                        music.singer = str[<span class="number">0</span>]</span><br><span class="line">                        music.song = str[<span class="number">1</span>]</span><br><span class="line">                    &#125;</span><br><span class="line">                    list.add(music)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 释放资源</span></span><br><span class="line">            cursor.close()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">fun <span class="title">isAudioControlPanelAvailable</span><span class="params">(context: Context)</span>: Boolean </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> isIntentAvailable(context, Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> fun <span class="title">isIntentAvailable</span><span class="params">(context: Context, intent: Intent)</span>: Boolean </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> context.packageManager.resolveActivity(intent, PackageManager.GET_RESOLVED_FILTER) != <span class="keyword">null</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="扫描音乐动画"><a href="#扫描音乐动画" class="headerlink" title="扫描音乐动画"></a>扫描音乐动画</h4><p>点击扫描音乐可实现雷达动画，音乐扫描完毕动画结束，实现扫描代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">fun <span class="title">scanMusic</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    val degrees = ObjectAnimator.ofInt(sv, <span class="string">"degrees"</span>, <span class="number">0</span>, <span class="number">360</span>)</span><br><span class="line">    degrees.interpolator = LinearInterpolator()</span><br><span class="line">    degrees.duration = <span class="number">1000</span></span><br><span class="line">    degrees.repeatCount = ValueAnimator.INFINITE</span><br><span class="line">    degrees.start()</span><br><span class="line"></span><br><span class="line">    async(&#123;</span><br><span class="line">        MyApplication.instance!!.getMusicDao().deleteAll()</span><br><span class="line">        <span class="keyword">for</span> (i in <span class="number">0</span>..getMusicData(MyApplication.instance!!).size - <span class="number">1</span>) &#123;</span><br><span class="line">            val list = Music(i.toLong(), getMusicData(MyApplication.instance!!).get(i).song, getMusicData(MyApplication.instance!!).get(i).singer, getMusicData(MyApplication.instance!!).get(i).path)</span><br><span class="line">            MyApplication.instance!!.getMusicDao().insertInTx(list)</span><br><span class="line">        &#125;</span><br><span class="line">        runOnUiThread &#123;</span><br><span class="line">            degrees.cancel()</span><br><span class="line">            Toast.makeText(MyApplication.instance!!,<span class="string">"已扫描完毕"</span>,Toast.LENGTH_SHORT).show()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>动画效果代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShaderView</span> <span class="keyword">extends</span> <span class="title">View</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绘制扫描圈的笔</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Paint mSweepPaint;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绘制背景bitmap的笔</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Paint mBitmapPaint;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 这个自定义View的宽度，就是你在xml布局里面设置的宽度（目前不支持）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mWidth;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 背景图片</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Bitmap mBitmap;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 雷达扫描旋转角度</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> degrees = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用于控制扫描圈的矩阵</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Matrix mSweepMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用于控制背景Bitmap的矩阵</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Matrix mBitmapMatrix = <span class="keyword">new</span> Matrix();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 着色器---生成扫描圈</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> SweepGradient mSweepGradient;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 图片着色器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> BitmapShader mBitmapShader;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> mScale;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ShaderView</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ShaderView</span><span class="params">(Context context, @Nullable AttributeSet attrs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, attrs);</span><br><span class="line">        init();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 属性动画，必须有setXxx方法，才可以针对这个属性实现动画</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> degrees</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDegrees</span><span class="params">(<span class="keyword">int</span> degrees)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.degrees = degrees;</span><br><span class="line">        postInvalidate();<span class="comment">//在主线程里执行OnDraw</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">//    1.准备好画笔</span></span><br><span class="line">        mSweepPaint = <span class="keyword">new</span> Paint();</span><br><span class="line">        mBitmapPaint = <span class="keyword">new</span> Paint();</span><br><span class="line"><span class="comment">//    2.图片着色器</span></span><br><span class="line">        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.scan_music);</span><br><span class="line">        mBitmapShader = <span class="keyword">new</span> BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);</span><br><span class="line"><span class="comment">//    3.将图片着色器设置给画笔</span></span><br><span class="line">        mBitmapPaint.setShader(mBitmapShader);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec);</span><br><span class="line"><span class="comment">//    获取这个自定义view的宽高，注意在onMeasure里获取，在构造函数里得到的是0</span></span><br><span class="line">        mWidth = getMeasuredWidth();</span><br><span class="line"><span class="comment">//    根据你所设置的view的尺寸和bitmap的尺寸计算一个缩放比例，否则的话，得到的图片是一个局部，而不是一整张图片</span></span><br><span class="line">        mScale = (<span class="keyword">float</span>) mWidth / (<span class="keyword">float</span>) mBitmap.getWidth();</span><br><span class="line"><span class="comment">//    4.梯度扫描着色器</span></span><br><span class="line">        mSweepGradient = <span class="keyword">new</span> SweepGradient(mWidth / <span class="number">2</span>, mWidth / <span class="number">2</span>, <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;Color.argb(<span class="number">50</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>), Color.argb(<span class="number">10</span>, <span class="number">30</span>, <span class="number">0</span>, <span class="number">0</span>)&#125;, <span class="keyword">null</span>);</span><br><span class="line"><span class="comment">//    5.将梯度扫描着色器设置给另外一支画笔</span></span><br><span class="line">        mSweepPaint.setShader(mSweepGradient);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDraw(canvas);</span><br><span class="line"><span class="comment">//    迫不得已的时候，才在onDraw方法写代码，能提前准备的要在之前去准备，</span></span><br><span class="line"><span class="comment">//    不要写在onDraw里面，因为onDraw会不停地刷新绘制，写的代码越多，越影响效率</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//    将图片缩放至你指定的自定义View的宽高</span></span><br><span class="line">        mBitmapMatrix.setScale(mScale, mScale);</span><br><span class="line">        mBitmapShader.setLocalMatrix(mBitmapMatrix);</span><br><span class="line"></span><br><span class="line"><span class="comment">//   设置扫描圈旋转角度</span></span><br><span class="line">        mSweepMatrix.setRotate(degrees, mWidth / <span class="number">2</span>, mWidth / <span class="number">2</span>);</span><br><span class="line">        mSweepGradient.setLocalMatrix(mSweepMatrix);</span><br><span class="line"></span><br><span class="line"><span class="comment">//    5. 使用设置好图片着色器的画笔，画圆，先画出下层的背景图片，在画出上层的扫描图片</span></span><br><span class="line">        canvas.drawCircle(mWidth / <span class="number">2</span>, mWidth / <span class="number">2</span>, mWidth / <span class="number">2</span>, mBitmapPaint);</span><br><span class="line">        canvas.drawCircle(mWidth / <span class="number">2</span>, mWidth / <span class="number">2</span>, mWidth / <span class="number">2</span>, mSweepPaint);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="实现音效设置"><a href="#实现音效设置" class="headerlink" title="实现音效设置"></a>实现音效设置</h3><p>效果图：</p>
+<p><img src="/2019/03/14/撸个应用学Android---空灵音乐本地音乐版/4.png" alt></p>
+<p>上文提到的isAudioControlPanelAvailable（）方法在设置中的音效处调用。AudioSessionId获取当前播放的音乐sessionid，如果将AudioSessionId设为0，则所有在播放的音频都会被影响到。</p>
+<p>调用代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> fun <span class="title">startEqualizer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (MusicUtils.isAudioControlPanelAvailable(activity)) &#123;</span><br><span class="line">        val intent = Intent()</span><br><span class="line">        val packageName = activity.packageName</span><br><span class="line">        intent.action = AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL</span><br><span class="line">        intent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)</span><br><span class="line">        intent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)</span><br><span class="line">        intent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, AudioSessionId)</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            startActivityForResult(intent, <span class="number">1</span>)</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: ActivityNotFoundException) &#123;</span><br><span class="line">            e.printStackTrace()</span><br><span class="line">            Toast.makeText(context, <span class="string">"设备不支持"</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Toast.makeText(context, <span class="string">"设备不支持"</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="定时停止播放"><a href="#定时停止播放" class="headerlink" title="定时停止播放"></a>定时停止播放</h3><p>音乐播放器一般会实现定时停止播放功能，向TimeStop（）方法中输入需要定时的参数。<br>代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">fun <span class="title">TimeStop</span><span class="params">(time: Long)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (time.toInt() == <span class="number">0</span> &amp;&amp; job == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Toast.makeText(<span class="keyword">this</span>, <span class="string">"停止播放功能未开启"</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (time.toInt() != <span class="number">0</span>) &#123;</span><br><span class="line">        val time1 = time * <span class="number">60000</span></span><br><span class="line">        Toast.makeText(<span class="keyword">this</span>, <span class="string">"$time 分钟后停止播放"</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">        job = launch(CommonPool) &#123;</span><br><span class="line">            delay(time1, TimeUnit.MILLISECONDS)</span><br><span class="line">            playService!!.pause()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        job!!.cancel()</span><br><span class="line">        Toast.makeText(<span class="keyword">this</span>, <span class="string">"已取消定时停止播放"</span>, Toast.LENGTH_SHORT).show()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="歌曲控制"><a href="#歌曲控制" class="headerlink" title="歌曲控制"></a>歌曲控制</h3><p>暂停播放等不在此赘述，具体可看源码，控制上一首下一首使用了Greendao数据库，扫码歌曲时，数据填入数据库中，下面是返回上一首的实现代码，下一首实现功能类似，使用Greendao主要是用来练练手，没有什么特别的原因。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">fun <span class="title">previous</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (position == <span class="number">0</span>) &#123;</span><br><span class="line">        num = MyApplication.instance!!.getMusicDao().queryBuilder().list().size.plus(-<span class="number">1</span>)</span><br><span class="line">        path = MyApplication.instance!!.getMusicDao().queryBuilder().where(MusicDao.Properties.Id.eq(num)).list()</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        num = position!!.plus(-<span class="number">1</span>)</span><br><span class="line">        path = MyApplication.instance!!.getMusicDao().queryBuilder().where(MusicDao.Properties.Id.eq(num)).list()</span><br><span class="line">    &#125;</span><br><span class="line">    prepare((path as MutableList&lt;Music&gt;?)!!.get(<span class="number">0</span>).path)</span><br><span class="line">    start()</span><br><span class="line">    position = num</span><br><span class="line"></span><br><span class="line">    val intent = Intent(<span class="string">"com.nilin.etherealmusic.play"</span>)</span><br><span class="line">    intent.putExtra(<span class="string">"song"</span>, (path as MutableList&lt;Music&gt;?)!!.get(<span class="number">0</span>).song)</span><br><span class="line">    intent.putExtra(<span class="string">"singer"</span>, (path as MutableList&lt;Music&gt;?)!!.get(<span class="number">0</span>).singer)</span><br><span class="line">    sendBroadcast(intent)</span><br><span class="line"></span><br><span class="line">    val editor = MyApplication.instance!!.getSharedPreferences(<span class="string">"music_pref"</span>, Context.MODE_PRIVATE).edit()</span><br><span class="line">    editor.putString(<span class="string">"song"</span>, (path as MutableList&lt;Music&gt;?)!!.get(<span class="number">0</span>).song)</span><br><span class="line">    editor.putInt(<span class="string">"position"</span>, position!!)</span><br><span class="line">    editor.apply()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>启动引导页动画、搜索后音乐列表显示、音乐进度条拖拽快进、扫描音乐条件控制等不多赘述。功能实现并不复杂，为后续添加网络音乐功能做准备，部分功能暂未实现，后续会更新完善。</p>
+<p>源码地址：<a href="https://github.com/ld11620967/EtherealMuisc" target="_blank" rel="noopener">https://github.com/ld11620967/EtherealMuisc</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/10/Android开发知识图谱/" rel="next" title="Android开发知识图谱">
+                <i class="fa fa-chevron-left"></i> Android开发知识图谱
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/14/基于Github搭建Hexo个人博客/" rel="prev" title="基于Github搭建Hexo个人博客">
+                基于Github搭建Hexo个人博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="Nilin">
+            
+              <p class="site-author-name" itemprop="name">Nilin</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ld11620967" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://music.163.com/#/playlist?id=142194157&userid=112608861" target="_blank" title="Music">
+                      
+                        <i class="fa fa-fw fa-Music"></i>Music</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三方库"><span class="nav-number">2.</span> <span class="nav-text">三方库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#环境准备"><span class="nav-number">3.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#效果图"><span class="nav-number">4.</span> <span class="nav-text">效果图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目目录"><span class="nav-number">5.</span> <span class="nav-text">项目目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#歌词显示"><span class="nav-number">6.</span> <span class="nav-text">歌词显示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扫描音乐"><span class="nav-number">7.</span> <span class="nav-text">扫描音乐</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#扫描音乐工具类"><span class="nav-number">7.1.</span> <span class="nav-text">扫描音乐工具类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#扫描音乐动画"><span class="nav-number">7.2.</span> <span class="nav-text">扫描音乐动画</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现音效设置"><span class="nav-number">8.</span> <span class="nav-text">实现音效设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定时停止播放"><span class="nav-number">9.</span> <span class="nav-text">定时停止播放</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#歌曲控制"><span class="nav-number">10.</span> <span class="nav-text">歌曲控制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Nilin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
